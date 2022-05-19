@@ -86,7 +86,26 @@ var (
 func (r *CronJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	/*
+		### 1: Load the CronJob by name
+
+		We'll fetch the CronJob using our client.  All client methods take a
+		context (to allow for cancellation) as their first argument, and the object
+		in question as their last.  Get is a bit special, in that it takes a
+		[`NamespacedName`](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/client?tab=doc#ObjectKey)
+		as the middle argument (most don't have a middle argument, as we'll see
+		below).
+
+		Many client methods also take variadic options at the end.
+	*/
+	var cronJob batchv1.CronJob
+	if err := r.Get(ctx, req.NamespacedName, &cronJob); err != nil {
+		log.Log.Error(err, "unable to fetch CronJob")
+		// we'll ignore not-found errors, since they can't be fixed by an immediate
+		// requeue (we'll need to wait for a new notification), and we can get them
+		// on deleted requests.
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
 
 	return ctrl.Result{}, nil
 }
