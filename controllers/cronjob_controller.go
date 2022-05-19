@@ -67,6 +67,13 @@ a couple more [markers](/reference/markers/rbac.md).
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
 
+/*
+Now, we get to the heart of the controller -- the reconciler logic.
+*/
+var (
+	scheduledTimeAnnotation = "batch.tutorial.kubebuilder.io/scheduled-at"
+)
+
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
